@@ -185,23 +185,15 @@ git commit -m "Initial deployment with 2 replicas"
 git push origin main
 ```
 
-📸 **Screenshot 14 – Push to GitHub**
+![alt text](<evidences/Screenshot from 2026-11-03 17-16-25.png>)
 
-
-
-
-
-📸 **Screenshot 15 – GitHub repo showing `manifests/` folder**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-17-18.png>)
 
 ---
 
 ## 7. Part C – Register the Application in Argo CD (Declarative)
 
-Create `argocd-app.yaml` (replace `<YOUR-GITHUB-USERNAME>`):
+Create `argocd-app.yaml`:
 
 ```yaml
 apiVersion: argoproj.io/v1alpha1
@@ -231,12 +223,7 @@ Apply it:
 ```bash
 kubectl apply -f argocd-app.yaml
 ```
-
-📸 **Screenshot 16 – Application created**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-18-13.png>)
 
 ```bash
 kubectl get applications -n argocd
@@ -244,35 +231,14 @@ kubectl get applications -n argocd
 
 Expected: `my-webapp   Synced   Healthy`
 
-📸 **Screenshot 17 – Application Synced/Healthy**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-18-23.png>)
 
 Verify the pods are spread across the worker nodes:
 
 ```bash
 kubectl get pods -n demo-app -o wide
 ```
-
-📸 **Screenshot 18 – 2 pods on worker nodes**
-
-
-
-
-
-📸 **Screenshot 19 – Argo CD UI tile `my-webapp` (Synced + Healthy)**
-
-
-
-
-
-📸 **Screenshot 20 – Argo CD resource tree (Application → Deployment → ReplicaSet → 2 Pods + Service)**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-22-51.png>)
 
 ---
 
@@ -284,24 +250,16 @@ Scale from 2 → 4 replicas **through Git**:
 sed -i 's/replicas: 2/replicas: 4/' manifests/deployment.yaml
 git diff
 ```
-
-📸 **Screenshot 21 – git diff showing replicas 2 → 4**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-25-16.png>)
 
 ```bash
 git add manifests/deployment.yaml
 git commit -m "Scale webapp to 4 replicas"
 git push origin main
 ```
+![alt text](<evidences/Screenshot from 2026-11-03 17-27-47.png>)
 
-📸 **Screenshot 22 – Push of scaling commit**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-28-15.png>)
 
 Click **Refresh** in the Argo CD UI (or wait ≤3 minutes for polling), then:
 
@@ -311,17 +269,9 @@ kubectl get pods -n demo-app
 
 Expected: 4 pods `Running`.
 
-📸 **Screenshot 23 – 4 pods in terminal**
+![alt text](<evidences/Screenshot from 2026-11-03 17-31-56.png>)
 
-
-
-
-
-📸 **Screenshot 24 – Argo CD UI showing 4 pods**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-31-33.png>)
 
 **Result:** The cluster changed only because Git changed – no `kubectl apply` was used.
 
@@ -343,17 +293,9 @@ kubectl get pods -n demo-app -w
 
 (Press `Ctrl+C` after pods return to 4.)
 
-📸 **Screenshot 25 – Scale-down command and pods terminating/recreating**
+![alt text](<evidences/Screenshot from 2026-11-03 17-33-44.png>)
 
-
-
-
-
-📸 **Screenshot 26 – Argo CD UI flashing OutOfSync / pods restored**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-34-09.png>)
 
 Confirm final state:
 
@@ -363,11 +305,7 @@ kubectl get deployment webapp-deploy -n demo-app
 
 Expected: `READY 4/4`
 
-📸 **Screenshot 27 – Deployment back to 4/4**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-35-29.png>)
 
 **Result:** Because `selfHeal: true`, Argo CD reverted the manual change to match Git.
 
@@ -383,11 +321,7 @@ git commit -m "Remove webapp service"
 git push origin main
 ```
 
-📸 **Screenshot 28 – Deleting service.yaml and pushing**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-36-24.png>)
 
 Click **Refresh** in the Argo CD UI, then:
 
@@ -397,17 +331,9 @@ kubectl get svc -n demo-app
 
 Expected: `No resources found in demo-app namespace.`
 
-📸 **Screenshot 29 – Service pruned (terminal)**
+![alt text](<evidences/Screenshot from 2026-11-03 17-37-57.png>)
 
-
-
-
-
-📸 **Screenshot 30 – Argo CD UI tree without the Service**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-39-15.png>)
 
 ### Rollback with `git revert`
 
@@ -416,11 +342,7 @@ git revert HEAD --no-edit
 git push origin main
 ```
 
-📸 **Screenshot 31 – git revert and push**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-39-55.png>)
 
 After Refresh:
 
@@ -430,21 +352,13 @@ kubectl get svc -n demo-app
 
 Expected: `webapp-svc` is back.
 
-📸 **Screenshot 32 – Service restored**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-40-52.png>)
 
 ```bash
 git log --oneline
 ```
 
-📸 **Screenshot 33 – Git history (audit trail)**
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-41-36.png>)
 
 ---
 
@@ -463,12 +377,7 @@ git log --oneline
 kind delete cluster --name dso202
 ```
 
-📸 **Screenshot 34 – Cluster deleted**
-
-
-
-
-
+![alt text](<evidences/Screenshot from 2026-11-03 17-42-41.png>)
 ---
 
 ## 13. Observations & Conclusion
